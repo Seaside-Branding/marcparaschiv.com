@@ -1,6 +1,7 @@
 const { list, put } = require("@vercel/blob");
 
 const HIDDEN_PATH = "portfolio/_meta/hidden.json";
+const MAX_BODY_BYTES = 128 * 1024;
 
 function parseBasicAuth(header) {
   if (!header || !header.startsWith("Basic ")) return null;
@@ -12,6 +13,24 @@ function parseBasicAuth(header) {
   } catch {
     return null;
   }
+}
+
+function safeEq(a, b) {
+  const x = String(a || "");
+  const y = String(b || "");
+  if (x.length !== y.length) return false;
+  let out = 0;
+  for (let i = 0; i < x.length; i++) {
+    out |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  }
+  return out === 0;
+}
+
+function isValidHidePath(value) {
+  if (typeof value !== "string") return false;
+  if (!value.startsWith("images/")) return false;
+  if (value.includes("..") || value.includes("\\")) return false;
+  return /\.(jpg|jpeg|png|webp|gif|avif)$/i.test(value);
 }
 
 function unauthorized(res) {
@@ -66,14 +85,28 @@ module.exports = async (req, res) => {
     const creds = parseBasicAuth(req.headers["authorization"]);
     const expectedUser = process.env.ADMIN_USERNAME || "";
     const expectedPass = process.env.ADMIN_PASSWORD || "";
-    if (!creds || creds.user !== expectedUser || creds.pass !== expectedPass) {
+    if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
       return unauthorized(res);
     }
+
+    const contentLength = Number(req.headers["content-length"] || "0");
+    if (Number.isFinite(contentLength) && contentLength > MAX_BODY_BYTES) {
+      res.statusCode = 413;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ error: "payload_too_large" }));
+      return;
+    }
+
     try {
       const raw = await new Promise((resolve, reject) => {
         let data = "";
         req.setEncoding("utf8");
-        req.on("data", (c) => (data += c));
+        req.on("data", (c) => {
+          data += c;
+          if (data.length > MAX_BODY_BYTES) {
+            reject(new Error("payload_too_large"));
+          }
+        });
         req.on("end", () => resolve(data));
         req.on("error", reject);
       });
@@ -82,15 +115,16 @@ module.exports = async (req, res) => {
       const current = await readHidden();
       let next = current.slice();
       if (Array.isArray(payload.items)) {
-        next = payload.items.filter(x => typeof x === "string");
+        next = payload.items.filter(isValidHidePath);
       } else {
         if (Array.isArray(payload.add)) {
           for (const u of payload.add) {
-            if (typeof u === "string" && !next.includes(u)) next.push(u);
+            if (isValidHidePath(u) && !next.includes(u)) next.push(u);
           }
         }
         if (Array.isArray(payload.remove)) {
-          next = next.filter(u => !payload.remove.includes(u));
+          const removeSet = new Set(payload.remove.filter(isValidHidePath));
+          next = next.filter(u => !removeSet.has(u));
         }
       }
       await writeHidden(next);
@@ -98,6 +132,14 @@ module.exports = async (req, res) => {
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ items: next }));
     } catch (e) {
+      if (String(e && e.message) === "payload_too_large") {
+        res.statusCode = 413;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ error: "payload_too_large" }));
+        return;
+      }
+
+      console.error("hide_list_update_failed", e);
       res.statusCode = 500;
       res.setHeader("Content-Type", "application/json");
       res.end(JSON.stringify({ error: "update_failed" }));

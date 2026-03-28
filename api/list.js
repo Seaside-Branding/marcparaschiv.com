@@ -39,9 +39,11 @@ module.exports = async (req, res) => {
     }
     items.reverse();
     res.statusCode = 200;
+    res.setHeader("Cache-Control", "public, max-age=30, s-maxage=60, stale-while-revalidate=300");
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ items }));
   } catch (e) {
+    console.error("list_failed", e);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "list_failed" }));

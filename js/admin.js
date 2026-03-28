@@ -1,15 +1,15 @@
 function qs(id) { return document.getElementById(id); }
 function qsa(sel, root=document) { return Array.from(root.querySelectorAll(sel)); }
 
-function getAuth() { return localStorage.getItem("adminAuth") || ""; }
+function getAuth() { return sessionStorage.getItem("adminAuth") || ""; }
 function setAuth(user, pass) {
   const token = btoa(`${user}:${pass}`);
-  localStorage.setItem("adminAuth", token);
-  localStorage.setItem("adminUser", user);
+  sessionStorage.setItem("adminAuth", token);
+  sessionStorage.setItem("adminUser", user);
 }
 function clearAuth() {
-  localStorage.removeItem("adminAuth");
-  localStorage.removeItem("adminUser");
+  sessionStorage.removeItem("adminAuth");
+  sessionStorage.removeItem("adminUser");
 }
 function authHeader() {
   const t = getAuth();
@@ -33,7 +33,7 @@ async function apiFetch(url, options={}) {
 function showApp() {
   qs("login").style.display = "none";
   qs("app").style.display = "block";
-  qs("who").textContent = localStorage.getItem("adminUser") || "";
+  qs("who").textContent = sessionStorage.getItem("adminUser") || "";
 }
 function showLogin() {
   qs("login").style.display = "block";
@@ -98,7 +98,10 @@ async function renderBlobGrid() {
   const grid = qs("blobGrid");
   grid.innerHTML = "";
   const res = await fetch("/api/list");
-  if (!res.ok) return;
+  if (!res.ok) {
+    qs("status").textContent = `Failed to load cloud images (${res.status})`;
+    return;
+  }
   const data = await res.json().catch(() => ({ items: [] }));
   const items = Array.isArray(data.items) ? data.items : [];
   for (const it of items) {
@@ -211,6 +214,16 @@ function wireAuth() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  // Migrate legacy localStorage auth to sessionStorage once.
+  if (!getAuth()) {
+    const legacyToken = localStorage.getItem("adminAuth");
+    const legacyUser = localStorage.getItem("adminUser");
+    if (legacyToken) sessionStorage.setItem("adminAuth", legacyToken);
+    if (legacyUser) sessionStorage.setItem("adminUser", legacyUser);
+  }
+  localStorage.removeItem("adminAuth");
+  localStorage.removeItem("adminUser");
+
   wireTabs();
   wireAuth();
   (async () => {

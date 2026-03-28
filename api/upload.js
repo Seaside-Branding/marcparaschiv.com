@@ -1,5 +1,15 @@
 const { put } = require("@vercel/blob");
 
+const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
+const ALLOWED_MIME = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "image/avif",
+]);
+
 function parseBasicAuth(header) {
   if (!header || !header.startsWith("Basic ")) return null;
   try {
@@ -10,6 +20,17 @@ function parseBasicAuth(header) {
   } catch {
     return null;
   }
+}
+
+function safeEq(a, b) {
+  const x = String(a || "");
+  const y = String(b || "");
+  if (x.length !== y.length) return false;
+  let out = 0;
+  for (let i = 0; i < x.length; i++) {
+    out |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  }
+  return out === 0;
 }
 
 function unauthorized(res) {
@@ -26,7 +47,21 @@ function badRequest(res, msg) {
 }
 
 function sanitizeFilename(name) {
-  return name.replace(/[^a-z0-9_.-]/gi, "_");
+  const cleaned = String(name || "")
+    .replace(/\.{2,}/g, "")
+    .replace(/[\\/]/g, "_")
+    .replace(/[^a-z0-9_.-]/gi, "_")
+    .replace(/^\.+/, "")
+    .slice(0, 120);
+
+  const dot = cleaned.lastIndexOf(".");
+  if (dot <= 0 || dot === cleaned.length - 1) {
+    return "upload.jpg";
+  }
+
+  const base = cleaned.slice(0, dot);
+  const ext = cleaned.slice(dot + 1).toLowerCase();
+  return `${base}.${ext}`;
 }
 
 module.exports = async (req, res) => {
@@ -42,20 +77,33 @@ module.exports = async (req, res) => {
   const expectedUser = process.env.ADMIN_USERNAME || "";
   const expectedPass = process.env.ADMIN_PASSWORD || "";
   const basic = parseBasicAuth(authHeader);
-  if (basic && basic.user === expectedUser && basic.pass === expectedPass) ok = true;
+  if (basic && safeEq(basic.user, expectedUser) && safeEq(basic.pass, expectedPass)) ok = true;
   if (!ok && authHeader.startsWith("Bearer ")) {
     const token = authHeader.slice(7);
-    if (token && token === expectedPass) ok = true;
+    if (token && safeEq(token, expectedPass)) ok = true;
   }
   if (!ok) return unauthorized(res);
 
   const url = new URL(req.url, "http://localhost");
   const filename = url.searchParams.get("filename");
-  const contentType = url.searchParams.get("contentType") || "application/octet-stream";
+  const contentType = String(url.searchParams.get("contentType") || "").toLowerCase();
   const alt = url.searchParams.get("alt") || "portfolio";
+  const contentLength = Number(req.headers["content-length"] || "0");
 
   if (!filename) {
     badRequest(res, "filename_required");
+    return;
+  }
+
+  if (!ALLOWED_MIME.has(contentType)) {
+    badRequest(res, "invalid_content_type");
+    return;
+  }
+
+  if (Number.isFinite(contentLength) && contentLength > MAX_UPLOAD_BYTES) {
+    res.statusCode = 413;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ error: "file_too_large" }));
     return;
   }
 
@@ -76,6 +124,7 @@ module.exports = async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ url: blob.url, pathname: blob.pathname }));
   } catch (e) {
+    console.error("upload_failed", e);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "upload_failed" }));

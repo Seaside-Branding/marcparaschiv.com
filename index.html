@@ -70,8 +70,7 @@
     
             "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+40 771 281 442",
-                "email": "marc@marcparaschiv.com"
+                "email": "contact@marcparaschiv.com"
             },
             "sameAs": ["https://www.instagram.com/marcnotheree/", "https://www.tiktok.com/@marcnotheree", "https://www.linkedin.com/in/marc-paraschiv-155604213/"]
         }
@@ -101,6 +100,8 @@
     <script src="js/index.js" defer></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
+            // Replace with your actual Google Analytics Measurement ID before enabling analytics in production.
+            window.GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
             emailjs.init({
                 publicKey: "xOLb9eiFfAyGzqa_X",
             });
@@ -125,10 +126,6 @@
         <div id="breaker">
         </div>
         <!-- BREAKER (SCREEN THAT DISPLAYS ON LINKS CLICK) -->
-        <!--------------- CURSOR --------------->
-        <div class="cursor"></div>
-        <div class="cursor-two"></div>
-        <!-- -------------CURSOR --------------->
         <!-- NAVIGATION CONTENT -->
         <div id="navigation">
             <!-- LOGO -->
@@ -149,6 +146,7 @@
                     <li class="navigation-opacity"><a href="#about" class="page-link hover">About</a></li>
                     <li class="navigation-opacity"><a href="#gallery" class="page-link hover">Gallery</a></li>
                     <li class="navigation-opacity"><a href="#contact" class="page-link hover">Contact</a></li>
+                    <li class="navigation-opacity"><a href="#policies" class="page-link hover">Policies</a></li>
                 </ul>
             </div>
             <!-- NAVIGATION LINKS -->
@@ -161,6 +159,12 @@
                 </ul>
             </div>
             <!-- SOCIAL MEDIA LINKS -->
+            <!-- POWERED BY SEASIDE BRANDING -->
+            <a href="https://seasidebranding.com" target="_blank" rel="noopener noreferrer" class="nav-powered-by navigation-opacity hover" aria-label="Powered by Seaside Branding">
+                <span>Powered by</span>
+                <img src="images/seasidebranding.svg" alt="Seaside Branding logo" loading="lazy">
+            </a>
+            <!-- POWERED BY SEASIDE BRANDING -->
         </div>
         <!-- NAVIGATION CONTENT -->
         <!--------------------- HOME PAGE --------------------->
@@ -695,8 +699,8 @@
                     <!-- CONTACT FORM CONTAINER -->
                     <div class="contact-info">
                         <div class="contact-info-content">
-                            <span class="highlight">Contacts<br></span> +40 771 281 442<br>
-                            <u><a href="mailto:marc@marcparaschiv.com" class="hover">marc@marcparaschiv.com</a></u>
+                            <span class="highlight">Contact<br></span>
+                            <u><a href="mailto:contact@marcparaschiv.com" class="hover">contact@marcparaschiv.com</a></u>
                         </div>
                         <div class="contact-info-content">
                             <span class="highlight">Social<br></span>
@@ -724,17 +728,363 @@
             <!-- CONTACT CONTENT -->
         </div>
         <!-------------------- CONTACT PAGE -------------------->
+        <!-------------------- PRIVACY PAGE -------------------->
+        <div id="privacy-policy">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover"> Marc Paraschiv </a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Privacy Policy</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <p>This Privacy Policy explains how Marc Paraschiv Photography processes personal data in line with the EU General Data Protection Regulation (GDPR) and applicable Romanian law.</p>
+
+                    <h3>1. Controller</h3>
+                    <p>Data Controller: Marc Paraschiv Photography<br>
+                    Contact email: <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a></p>
+
+                    <h3>2. Data We May Process</h3>
+                    <p>When you contact us, we may process your name, email address, and message content submitted through the contact form, as well as technical data required to secure and operate the website.</p>
+
+                    <h3>3. Purpose and Legal Basis</h3>
+                    <p>Your data is processed to respond to inquiries, provide requested services, maintain website security, and comply with legal obligations. The legal basis is typically pre-contractual communication, legitimate interests, or legal obligation depending on context.</p>
+
+                    <h3>4. Data Retention</h3>
+                    <p>We keep personal data only for as long as necessary to handle your request, maintain records, or meet legal requirements.</p>
+
+                    <h3>5. Sharing of Data</h3>
+                    <p>Data may be processed by trusted service providers strictly for hosting, communication, and website operations. Data is not sold.</p>
+
+                    <h3>6. Your GDPR Rights</h3>
+                    <p>You have the right to request access, rectification, erasure, restriction, portability, and objection, and to lodge a complaint with your competent supervisory authority.</p>
+
+                    <h3>7. Exercising Your Rights</h3>
+                    <p>To exercise your rights, email <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a> with enough detail to identify your request.</p>
+
+                    <h3>8. Security</h3>
+                    <p>Reasonable technical and organizational safeguards are used to protect personal data. No method of transmission over the internet is completely secure.</p>
+                </div>
+            </div>
+        </div>
+        <!-------------------- PRIVACY PAGE -------------------->
+        <!-------------------- LEGAL PAGE -------------------->
+        <div id="legal-notice">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover"> Marc Paraschiv </a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Legal Notice</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <p>This website is operated by Marc Paraschiv Photography.</p>
+
+                    <h3>1. Website Purpose</h3>
+                    <p>This site presents a professional photography portfolio and allows direct contact regarding collaborations, bookings, and services.</p>
+
+                    <h3>2. Intellectual Property</h3>
+                    <p>Unless otherwise stated, all photographs, branding elements, and text content on this website are protected by applicable intellectual property law. Reproduction, publication, or commercial reuse requires prior written consent.</p>
+
+                    <h3>3. Liability</h3>
+                    <p>Content is provided for general information. While maintained carefully, no guarantee is made regarding completeness or uninterrupted availability of content or services.</p>
+
+                    <h3>4. External Links</h3>
+                    <p>This website may include links to third-party platforms. Responsibility for external content belongs to their respective operators.</p>
+
+                    <h3>5. Contact</h3>
+                    <p>For legal inquiries, contact: <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a></p>
+                </div>
+            </div>
+        </div>
+        <!-------------------- LEGAL PAGE -------------------->
+        <!-------------------- COOKIE PAGE -------------------->
+        <div id="cookie-policy">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover"> Marc Paraschiv </a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Cookie Policy</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <p>This website uses essential cookies for core functionality and optional analytics cookies to understand usage patterns.</p>
+
+                    <h3>1. Essential Cookies</h3>
+                    <p>Essential cookies support basic navigation and security. These are required for the site to function properly.</p>
+
+                    <h3>2. Analytics Cookies</h3>
+                    <p>Analytics cookies are optional and are only enabled after your consent. They help us improve the website by understanding visitor behavior in aggregate.</p>
+
+                    <h3>3. Your Choices</h3>
+                    <p>You can accept, reject, or customize analytics cookies from the cookie banner, and reopen preferences anytime from the footer.</p>
+
+                    <h3>4. Retention and Providers</h3>
+                    <p>If enabled, analytics data may be processed by trusted third-party providers under their own retention and compliance terms.</p>
+
+                    <h3>5. Contact</h3>
+                    <p>For cookie-related questions, contact <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a>.</p>
+                </div>
+            </div>
+        </div>
+        <!-------------------- COOKIE PAGE -------------------->
+        <!-------------------- ANALYTICS PAGE -------------------->
+        <div id="google-analytics">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover"> Marc Paraschiv </a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Google Analytics</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <p>Google Analytics is used only with consent to measure overall website performance and improve user experience.</p>
+
+                    <h3>1. What Is Collected</h3>
+                    <p>When enabled, analytics may collect pseudonymous usage metrics such as page views, session events, and traffic source information.</p>
+
+                    <h3>2. Consent Requirement</h3>
+                    <p>Analytics scripts and related cookies are blocked by default and are loaded only after you provide explicit consent.</p>
+
+                    <h3>3. Managing Consent</h3>
+                    <p>You can update your analytics preference at any time through the Cookie Settings button in the footer.</p>
+
+                    <h3>4. Additional Information</h3>
+                    <p>See Google policy details at <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google Privacy Policy</a>.</p>
+
+                    <h3>5. Contact</h3>
+                    <p>For analytics-related requests, contact <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a>.</p>
+                </div>
+            </div>
+        </div>
+        <!-------------------- ANALYTICS PAGE -------------------->
+        <!-------------------- POLICIES PAGE -------------------->
+        <div id="policies">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover">Marc Paraschiv</a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Policies & Compliance</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <p>Access our legal documentation and compliance policies below:</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Privacy Policy</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">Our data protection and privacy practices.</p>
+                            <a href="#privacy-policy" class="page-link hover" style="color: #205781; text-decoration: underline; font-weight: 600;">Read Policy →</a>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Cookie Policy</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">How we use cookies and tracking technologies.</p>
+                            <a href="#cookie-policy" class="page-link hover" style="color: #205781; text-decoration: underline; font-weight: 600;">Read Policy →</a>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Terms of Service</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">Terms governing your use of our website and services.</p>
+                            <a href="#terms-of-service" class="page-link hover" style="color: #205781; text-decoration: underline; font-weight: 600;">Read Terms →</a>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Legal Notice</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">Legal information and intellectual property rights.</p>
+                            <a href="#legal-notice" class="page-link hover" style="color: #205781; text-decoration: underline; font-weight: 600;">Read Notice →</a>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Google Analytics</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">How we use analytics to improve the site.</p>
+                            <a href="#google-analytics" class="page-link hover" style="color: #205781; text-decoration: underline; font-weight: 600;">Read Policy →</a>
+                        </div>
+                        <div style="padding: 20px; border: 1px solid rgba(197, 219, 212, 0.25); border-radius: 12px; background: rgba(197, 219, 212, 0.04);">
+                            <h3 style="color: #205781; margin-bottom: 10px; font-size: 18px;">Cookie Settings</h3>
+                            <p style="color: #205781; font-size: 14px; margin-bottom: 15px;">Manage your cookie and analytics preferences.</p>
+                            <button type="button" class="cookie-settings-link hover" id="cookie-open-settings-policies" style="width: 100%; padding: 8px; border-radius: 6px;">Open Settings →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-------------------- POLICIES PAGE -------------------->
+        <!-------------------- TERMS OF SERVICE PAGE -------------------->
+        <div id="terms-of-service">
+            <div class="legal-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover">Marc Paraschiv</a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="legal-heading">Terms of Service</div>
+                <div class="legal-updated">Last updated: March 28, 2026</div>
+                <div class="legal-body">
+                    <h3>1. Agreement to Terms</h3>
+                    <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.</p>
+
+                    <h3>2. License</h3>
+                    <p>Marc Paraschiv grants you a limited license to access and make personal use of this website. You may not download or modify any portion of this website except with express written permission. This license does not include any resale or commercial use of this website or its contents.</p>
+
+                    <h3>3. Intellectual Property Rights</h3>
+                    <p>Unless otherwise stated, Marc Paraschiv Photography owns the intellectual property rights for all material on this website. All intellectual property rights are reserved. You may access this from your browser and print pages for personal use, subject to restrictions set in these terms and conditions.</p>
+
+                    <h3>4. User Content & Photography</h3>
+                    <p>The photographs displayed on this website are the exclusive intellectual property of Marc Paraschiv Photography. You may not reproduce, distribute, transmit, display, or otherwise use any photographs without prior written consent. Any unauthorized use may violate copyright, trademark, and other applicable laws.</p>
+
+                    <h3>5. Restrictions</h3>
+                    <p>You are restricted from:</p>
+                    <ul style="margin-left: 20px; color: #205781;">
+                        <li>Publishing any website material in any other media</li>
+                        <li>Selling, sublicensing, or otherwise commercializing website material</li>
+                        <li>Publicly performing or displaying any website material</li>
+                        <li>Using this website in any way that damages, disables, or impairs the website</li>
+                        <li>Using any data mining, robots, or similar data gathering tools</li>
+                    </ul>
+
+                    <h3>6. Photo Booking & Services</h3>
+                    <p>Any photography services or bookings are subject to terms to be mutually agreed upon. Discussion of pricing, availability, and session terms will be conducted via contact email. A booking is confirmed upon written agreement and deposit payment.</p>
+
+                    <h3>7. Limitation of Liability</h3>
+                    <p>The information on this website is provided "as-is" without any representations or warranties, express or implied. Marc Paraschiv makes no representations or warranties in relation to this website or the information and materials provided. We will not be liable to you in relation to the contents of, or use of, or otherwise in connection with, this website for indirect, special, or consequential loss, or for any business losses, loss of revenue, income, profits, or anticipated savings.</p>
+
+                    <h3>8. Accuracy of Information</h3>
+                    <p>While we strive to keep the information on this website accurate and up-to-date, we make no representations or warranties of any kind, express or implied. We disclaim all responsibility and liability for the completeness, accuracy, availability, use, or variations of information contained on this website.</p>
+
+                    <h3>9. External Links</h3>
+                    <p>Although we include links to other websites, we are not responsible for the content of external sites. Your use of external websites is at your own risk and subject to the terms and conditions of those websites.</p>
+
+                    <h3>10. Age of Consent</h3>
+                    <p>This website and all services are intended only for individuals aged 18 and older. By using this website, you represent and warrant that you are at least 18 years of age.</p>
+
+                    <h3>11. Governing Law & Jurisdiction</h3>
+                    <p>These terms and conditions are governed by and construed in accordance with the laws of Romania, and you irrevocably submit to the exclusive jurisdiction of the courts located in Romania.</p>
+
+                    <h3>12. Modification of Terms</h3>
+                    <p>Marc Paraschiv reserves the right to modify these terms and conditions at any time. Changes will be effective immediately upon posting to the website. Your continued use of the website following the posting of revised terms means that you accept and agree to the changes.</p>
+
+                    <h3>13. Contact</h3>
+                    <p>If you have any questions about these Terms of Service, please contact us at <a href="mailto:contact@marcparaschiv.com">contact@marcparaschiv.com</a>.</p>
+                </div>
+            </div>
+        </div>
+        <!-------------------- TERMS OF SERVICE PAGE -------------------->
+        
+        <footer class="site-footer">
+            <div class="footer-inner">
+                <div class="footer-top-row">
+                    <div class="footer-links">
+                        <a href="#policies" class="page-link hover">Policies</a>
+                        <a href="#privacy-policy" class="page-link hover">Privacy Policy</a>
+                        <a href="#cookie-policy" class="page-link hover">Cookie Policy</a>
+                        <a href="#legal-notice" class="page-link hover">Legal Notice</a>
+                        <a href="#terms-of-service" class="page-link hover">Terms of Service</a>
+                        <a href="#google-analytics" class="page-link hover">Google Analytics</a>
+                        <a href="mailto:contact@marcparaschiv.com?subject=GDPR%20Data%20Request" class="hover">GDPR Request</a>
+                        <button type="button" class="cookie-settings-link hover" id="cookie-open-settings">Cookie Settings</button>
+                        <a href="#contact" class="page-link hover footer-contact-mobile">Contact</a>
+                    </div>
+                </div>
+                <a href="https://seasidebranding.com" target="_blank" rel="noopener noreferrer" class="footer-powered hover" aria-label="Powered by Seaside Branding">
+                    <span>Powered by</span>
+                    <img src="images/seasidebranding.svg" alt="Seaside Branding logo" loading="lazy">
+                </a>
+            </div>
+        </footer>
+        <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+            <div class="cookie-banner-content">
+                <div class="cookie-banner-title">Cookie Preferences</div>
+                <div class="cookie-banner-text">Essential cookies are always active. Optional analytics cookies are blocked until you consent.</div>
+                <div class="cookie-banner-controls">
+                    <label class="cookie-check-row">
+                        <input type="checkbox" checked disabled>
+                        <span>Essential cookies (required)</span>
+                    </label>
+                    <label class="cookie-check-row">
+                        <input type="checkbox" id="cookie-analytics-optin">
+                        <span>Analytics cookies</span>
+                    </label>
+                </div>
+                <div id="cookie-settings-panel" class="cookie-settings-panel">
+                    <div>Adjust your analytics consent and press Save Preferences. You can reopen this panel anytime from the footer.</div>
+                    <button type="button" id="cookie-close-settings" class="cookie-btn cookie-btn-secondary">Close</button>
+                </div>
+            </div>
+            <div class="cookie-banner-actions">
+                <button type="button" id="cookie-reject" class="cookie-btn cookie-btn-secondary">Reject</button>
+                <button type="button" id="cookie-save" class="cookie-btn cookie-btn-secondary">Save Preferences</button>
+                <button type="button" id="cookie-accept" class="cookie-btn cookie-btn-primary">Accept All</button>
+            </div>
+        </div>
         <!-- Popup Modal -->
         <div id="popup-modal" class="popup-modal">
-            <span class="popup-close"></span>
+            <button type="button" class="popup-close" aria-label="Close image viewer"></button>
             <div id="popup-loader" class="popup-loader"></div>
             <!-- Loader -->
             <img class="popup-content" id="popup-image" alt="Popup Image" >
             <div id="popup-caption"></div>
+            <button type="button" id="popup-prev" class="popup-nav-btn popup-nav-prev" aria-label="Previous image">&#8249;</button>
+            <button type="button" id="popup-next" class="popup-nav-btn popup-nav-next" aria-label="Next image">&#8250;</button>
+            <div id="popup-counter" class="popup-counter" aria-live="polite">0 / 0</div>
             <div class="zoom-controls">
-                <button id="zoom-out" class="zoom-btn">−</button>
-                <button id="zoom-reset" class="zoom-btn">100%</button>
-                <button id="zoom-in" class="zoom-btn">+</button>
+                <button id="zoom-out" class="zoom-btn" aria-label="Zoom out">−</button>
+                <button id="zoom-reset" class="zoom-btn" aria-label="Reset zoom">100%</button>
+                <button id="zoom-in" class="zoom-btn" aria-label="Zoom in">+</button>
             </div>
         </div>
     </main>
@@ -760,20 +1110,6 @@
                 });
             });
     </script>-->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const galleryGrid = document.querySelector('.gallery-grid');
-            if (!galleryGrid) return;
-            const columns = Array.from(galleryGrid.children);
-            // Shuffle columns array
-            for (let i = columns.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [columns[i], columns[j]] = [columns[j], columns[i]];
-            }
-            // Remove all columns and re-append in shuffled order
-            columns.forEach(col => galleryGrid.appendChild(col));
-        });
-    </script>
 </body>
 
 </html>

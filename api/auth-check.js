@@ -10,11 +10,29 @@ function parseBasicAuth(header) {
   }
 }
 
+function safeEq(a, b) {
+  const x = String(a || "");
+  const y = String(b || "");
+  if (x.length !== y.length) return false;
+  let out = 0;
+  for (let i = 0; i < x.length; i++) {
+    out |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  }
+  return out === 0;
+}
+
 module.exports = async (req, res) => {
+  if (req.method !== "POST") {
+    res.statusCode = 405;
+    res.setHeader("Allow", "POST");
+    res.end("Method Not Allowed");
+    return;
+  }
+
   const creds = parseBasicAuth(req.headers["authorization"]);
   const expectedUser = process.env.ADMIN_USERNAME || "";
   const expectedPass = process.env.ADMIN_PASSWORD || "";
-  if (!creds || creds.user !== expectedUser || creds.pass !== expectedPass) {
+  if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
     res.statusCode = 401;
     res.setHeader("WWW-Authenticate", 'Basic realm="admin"');
     res.setHeader("Content-Type", "application/json");

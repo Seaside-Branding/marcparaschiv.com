@@ -12,6 +12,17 @@ function parseBasicAuth(header) {
   }
 }
 
+function safeEq(a, b) {
+  const x = String(a || "");
+  const y = String(b || "");
+  if (x.length !== y.length) return false;
+  let out = 0;
+  for (let i = 0; i < x.length; i++) {
+    out |= x.charCodeAt(i) ^ y.charCodeAt(i);
+  }
+  return out === 0;
+}
+
 function unauthorized(res) {
   res.statusCode = 401;
   res.setHeader("WWW-Authenticate", 'Basic realm="admin"');
@@ -50,7 +61,7 @@ module.exports = async (req, res) => {
   const creds = parseBasicAuth(req.headers["authorization"]);
   const expectedUser = process.env.ADMIN_USERNAME || "";
   const expectedPass = process.env.ADMIN_PASSWORD || "";
-  if (!creds || creds.user !== expectedUser || creds.pass !== expectedPass) {
+  if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
     unauthorized(res);
     return;
   }
@@ -62,6 +73,13 @@ module.exports = async (req, res) => {
     res.statusCode = 400;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "pathname_required" }));
+    return;
+  }
+
+  if (!pathname.startsWith("portfolio/")) {
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ error: "invalid_pathname" }));
     return;
   }
 
@@ -84,6 +102,7 @@ module.exports = async (req, res) => {
       res.end(JSON.stringify({ ok: true, count: toDelete.length }));
     }
   } catch (e) {
+    console.error("delete_failed", e);
     res.statusCode = 500;
     res.setHeader("Content-Type", "application/json");
     res.end(JSON.stringify({ error: "delete_failed" }));
