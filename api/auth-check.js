@@ -21,6 +21,8 @@ function safeEq(a, b) {
   return out === 0;
 }
 
+const { getAdminCredentials } = require("./_local-dev");
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.statusCode = 405;
@@ -30,8 +32,7 @@ module.exports = async (req, res) => {
   }
 
   const creds = parseBasicAuth(req.headers["authorization"]);
-  const expectedUser = process.env.ADMIN_USERNAME || "";
-  const expectedPass = process.env.ADMIN_PASSWORD || "";
+  const { user: expectedUser, pass: expectedPass } = getAdminCredentials();
   if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
     res.statusCode = 401;
     res.setHeader("WWW-Authenticate", 'Basic realm="admin"');

@@ -1,4 +1,5 @@
 const { list } = require("@vercel/blob");
+const { isLocalDevRuntime, listLocalUploads } = require("./_local-dev");
 
 module.exports = async (req, res) => {
   if (req.method !== "GET") {
@@ -9,6 +10,15 @@ module.exports = async (req, res) => {
   }
 
   try {
+    if (isLocalDevRuntime()) {
+      const items = await listLocalUploads();
+      res.statusCode = 200;
+      res.setHeader("Cache-Control", "no-store");
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ items }));
+      return;
+    }
+
     const result = await list({ prefix: "portfolio/" });
     const blobs = Array.isArray(result.blobs) ? result.blobs : [];
     function extractMeta(pathname) {

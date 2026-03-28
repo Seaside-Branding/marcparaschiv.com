@@ -99,9 +99,9 @@
     <script src="js/circletype.min.js" defer></script>
     <script src="js/index.js" defer></script>
     <script>
+        // Replace with your actual Google Analytics Measurement ID before enabling analytics in production.
+        window.GA_MEASUREMENT_ID = "G-C7S61L2GZE";
         window.addEventListener('DOMContentLoaded', () => {
-            // Replace with your actual Google Analytics Measurement ID before enabling analytics in production.
-            window.GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
             emailjs.init({
                 publicKey: "xOLb9eiFfAyGzqa_X",
             });
@@ -1024,6 +1024,36 @@
             </div>
         </div>
         <!-------------------- TERMS OF SERVICE PAGE -------------------->
+        <!-------------------- NOT FOUND PAGE -------------------->
+        <div id="not-found">
+            <div class="not-found-content">
+                <div class="navigation-bar">
+                    <div class="logo">
+                        <a href="#home" class="page-link hover">Marc Paraschiv</a>
+                    </div>
+                    <div class="menu-bar hover">
+                        <div class="menu-bar-text">
+                            <a href="#">Menu</a>
+                        </div>
+                        <div class="menu-bar-line-container">
+                            <span class="menu-bar-line"></span>
+                            <span class="menu-bar-line"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="not-found-body">
+                    <p class="not-found-kicker">404</p>
+                    <h1 class="not-found-title">This page is out of frame.</h1>
+                    <p class="not-found-text">The link you opened is not available. Try heading back to Home or continue browsing the gallery.</p>
+                    <div class="not-found-actions">
+                        <a href="#home" class="page-link hover not-found-button">Back Home</a>
+                        <a href="#gallery" class="page-link hover not-found-button not-found-button-secondary">View Gallery</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-------------------- NOT FOUND PAGE -------------------->
         
         <footer class="site-footer">
             <div class="footer-inner">
@@ -1060,10 +1090,7 @@
                         <span>Analytics cookies</span>
                     </label>
                 </div>
-                <div id="cookie-settings-panel" class="cookie-settings-panel">
-                    <div>Adjust your analytics consent and press Save Preferences. You can reopen this panel anytime from the footer.</div>
-                    <button type="button" id="cookie-close-settings" class="cookie-btn cookie-btn-secondary">Close</button>
-                </div>
+                
             </div>
             <div class="cookie-banner-actions">
                 <button type="button" id="cookie-reject" class="cookie-btn cookie-btn-secondary">Reject</button>
@@ -1093,7 +1120,6 @@
     <script src="js/jquery.min.js" defer></script>
     <script src="js/masonry.min.js" defer></script>
     <script src="js/jquery.lettering.js" defer></script>
-    <script src="js/index.js" defer></script>
     <!--<script>
         fetch('images/uploads/photos.json')
             .then(res => res.json())

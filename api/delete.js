@@ -1,4 +1,10 @@
 const { del, list } = require("@vercel/blob");
+const {
+  deleteLocalUpload,
+  getAdminCredentials,
+  isLocalDevRuntime,
+  listLocalUploads,
+} = require("./_local-dev");
 
 function parseBasicAuth(header) {
   if (!header || !header.startsWith("Basic ")) return null;
@@ -59,8 +65,7 @@ module.exports = async (req, res) => {
   }
 
   const creds = parseBasicAuth(req.headers["authorization"]);
-  const expectedUser = process.env.ADMIN_USERNAME || "";
-  const expectedPass = process.env.ADMIN_PASSWORD || "";
+  const { user: expectedUser, pass: expectedPass } = getAdminCredentials();
   if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
     unauthorized(res);
     return;
@@ -84,6 +89,29 @@ module.exports = async (req, res) => {
   }
 
   try {
+    if (isLocalDevRuntime()) {
+      if (!all) {
+        const removed = await deleteLocalUpload(pathname);
+        res.statusCode = removed ? 200 : 404;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ ok: removed, count: removed ? 1 : 0 }));
+        return;
+      }
+
+      const key = canonicalKey(pathname);
+      const items = await listLocalUploads();
+      const matches = items.filter((item) => canonicalKey(item.pathname) === key);
+      let count = 0;
+      for (const item of matches) {
+        const removed = await deleteLocalUpload(item.pathname);
+        if (removed) count += 1;
+      }
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ ok: true, count }));
+      return;
+    }
+
     if (!all) {
       await del(pathname);
       res.statusCode = 200;

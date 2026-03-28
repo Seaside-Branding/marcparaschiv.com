@@ -1,4 +1,7 @@
 User-agent: *
-Disallow: /images/
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /images/uploads-local/
+
 Sitemap: https://marcparaschiv.com/sitemap.xml

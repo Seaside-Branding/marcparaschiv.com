@@ -1,4 +1,11 @@
 const { put } = require("@vercel/blob");
+const {
+  getAdminCredentials,
+  isLocalDevRuntime,
+  saveLocalUpload,
+  sanitizeFilename,
+  sanitizeSegment,
+} = require("./_local-dev");
 
 const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
 const ALLOWED_MIME = new Set([
@@ -46,24 +53,6 @@ function badRequest(res, msg) {
   res.end(JSON.stringify({ error: msg || "bad_request" }));
 }
 
-function sanitizeFilename(name) {
-  const cleaned = String(name || "")
-    .replace(/\.{2,}/g, "")
-    .replace(/[\\/]/g, "_")
-    .replace(/[^a-z0-9_.-]/gi, "_")
-    .replace(/^\.+/, "")
-    .slice(0, 120);
-
-  const dot = cleaned.lastIndexOf(".");
-  if (dot <= 0 || dot === cleaned.length - 1) {
-    return "upload.jpg";
-  }
-
-  const base = cleaned.slice(0, dot);
-  const ext = cleaned.slice(dot + 1).toLowerCase();
-  return `${base}.${ext}`;
-}
-
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.statusCode = 405;
@@ -74,8 +63,7 @@ module.exports = async (req, res) => {
 
   const authHeader = req.headers["authorization"] || "";
   let ok = false;
-  const expectedUser = process.env.ADMIN_USERNAME || "";
-  const expectedPass = process.env.ADMIN_PASSWORD || "";
+  const { user: expectedUser, pass: expectedPass } = getAdminCredentials();
   const basic = parseBasicAuth(authHeader);
   if (basic && safeEq(basic.user, expectedUser) && safeEq(basic.pass, expectedPass)) ok = true;
   if (!ok && authHeader.startsWith("Bearer ")) {
@@ -108,10 +96,22 @@ module.exports = async (req, res) => {
   }
 
   const base = sanitizeFilename(filename);
-  const safeAlt = sanitizeFilename(alt);
+  const safeAlt = sanitizeSegment(alt, "portfolio");
   const path = `portfolio/${safeAlt}/${base}`;
 
   try {
+    if (isLocalDevRuntime()) {
+      const localUpload = await saveLocalUpload(req, {
+        alt: safeAlt,
+        filename: base,
+        maxBytes: MAX_UPLOAD_BYTES,
+      });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify(localUpload));
+      return;
+    }
+
     const blob = await put(path, req, {
       access: "public",
       contentType,

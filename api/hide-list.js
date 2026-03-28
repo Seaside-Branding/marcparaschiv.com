@@ -1,4 +1,10 @@
 const { list, put } = require("@vercel/blob");
+const {
+  getAdminCredentials,
+  isLocalDevRuntime,
+  readLocalHiddenList,
+  writeLocalHiddenList,
+} = require("./_local-dev");
 
 const HIDDEN_PATH = "portfolio/_meta/hidden.json";
 const MAX_BODY_BYTES = 128 * 1024;
@@ -69,6 +75,14 @@ async function writeHidden(items) {
 module.exports = async (req, res) => {
   if (req.method === "GET") {
     try {
+      if (isLocalDevRuntime()) {
+        const items = await readLocalHiddenList();
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ items }));
+        return;
+      }
+
       const items = await readHidden();
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
@@ -83,8 +97,7 @@ module.exports = async (req, res) => {
 
   if (req.method === "PUT") {
     const creds = parseBasicAuth(req.headers["authorization"]);
-    const expectedUser = process.env.ADMIN_USERNAME || "";
-    const expectedPass = process.env.ADMIN_PASSWORD || "";
+    const { user: expectedUser, pass: expectedPass } = getAdminCredentials();
     if (!creds || !safeEq(creds.user, expectedUser) || !safeEq(creds.pass, expectedPass)) {
       return unauthorized(res);
     }
@@ -127,6 +140,15 @@ module.exports = async (req, res) => {
           next = next.filter(u => !removeSet.has(u));
         }
       }
+
+      if (isLocalDevRuntime()) {
+        await writeLocalHiddenList(next);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({ items: next }));
+        return;
+      }
+
       await writeHidden(next);
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");

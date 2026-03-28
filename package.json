@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "Static portfolio with serverless functions for image uploads",
   "license": "UNLICENSED",
+  "scripts": {
+    "dev": "node local-dev-server.js",
+    "start": "node local-dev-server.js"
+  },
   "engines": {
     "node": ">=18"
   },
