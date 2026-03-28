@@ -1,6 +1,27 @@
 const { list } = require("@vercel/blob");
 const { isLocalDevRuntime, listLocalUploads } = require("./_local-dev");
 
+const ALLOWED_CATEGORIES = new Set([
+  "portfolio",
+  "portrait",
+  "event",
+  "advertising",
+  "nature",
+  "architecture",
+  "places",
+]);
+
+function normalizeCategory(value) {
+  const safe = String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9_-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  const canonical = safe === "events" ? "event" : safe;
+  return ALLOWED_CATEGORIES.has(canonical) ? canonical : "portfolio";
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "GET") {
     res.statusCode = 405;
@@ -31,6 +52,7 @@ module.exports = async (req, res) => {
       } else if (segs.length >= 3) {
         alt = segs[1]; // portfolio/<alt>/<file>
       }
+      alt = normalizeCategory(alt);
       let base = last;
       if (m && m[0]) {
         base = last.substring(m[0].length); // strip prefix marker

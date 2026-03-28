@@ -212,7 +212,6 @@ let isRouteTransitioning = false;
 
 function normalizeRouteTarget(target) {
   const fallback = "#home";
-  const missingRoute = "#not-found";
 
   if (!target || typeof target !== "string") return fallback;
 
@@ -221,10 +220,6 @@ function normalizeRouteTarget(target) {
 
   if (ROUTE_SECTION_IDS.includes(hash.slice(1)) && document.querySelector(hash)) {
     return hash;
-  }
-
-  if (document.querySelector(missingRoute)) {
-    return missingRoute;
   }
 
   return fallback;
@@ -591,6 +586,8 @@ function initializeGallery() {
     return;
   }
 
+  const gallerySection = document.getElementById("gallery");
+  const galleryHeader = document.querySelector(".gallery-header-content");
   const imageSelector = document.querySelector(".image-selector");
   const shouldUseMasonry = () => window.innerWidth > 0;
   const isMobileViewport = () => window.innerWidth <= 675;
@@ -601,6 +598,8 @@ function initializeGallery() {
   let dynamicGalleryLoaded = false;
   let layoutObserver = null;
   let mobileScrollLayoutTimer;
+  let lastScrollY = window.scrollY || 0;
+  let selectorHidden = false;
   const shouldUseLocalApi = (() => {
     const host = window.location.hostname;
     const port = window.location.port;
@@ -608,9 +607,27 @@ function initializeGallery() {
     const isStaticFiveServer = isLocalHost && port === "5500";
     return !isStaticFiveServer;
   })();
+  const ALLOWED_GALLERY_CATEGORIES = new Set([
+    "portfolio",
+    "portrait",
+    "event",
+    "advertising",
+    "nature",
+    "architecture",
+    "places",
+  ]);
+  const CATEGORY_LABELS = {
+    portrait: "Portrait",
+    event: "Events",
+    advertising: "Advertising",
+    nature: "Nature",
+    architecture: "Architecture",
+    places: "Places",
+  };
 
   function normalizeCategoryName(value) {
     const raw = (value || "").toLowerCase().trim();
+    if (raw === "all") return "all";
     const aliases = {
       event: "event",
       events: "event",
@@ -621,7 +638,30 @@ function initializeGallery() {
       architecture: "architecture",
       architectures: "architecture",
     };
-    return aliases[raw] || raw;
+    const normalized = aliases[raw] || raw;
+    return ALLOWED_GALLERY_CATEGORIES.has(normalized) ? normalized : "portfolio";
+  }
+
+  function isGalleryRouteActive() {
+    return normalizeRouteTarget(window.location.hash || "#home") === "#gallery";
+  }
+
+  function setSelectorHidden(hidden) {
+    if (!galleryHeader || !imageSelector) return;
+    const shouldHide = Boolean(hidden);
+    if (selectorHidden === shouldHide) return;
+    selectorHidden = shouldHide;
+    galleryHeader.classList.toggle("selector-hidden", shouldHide);
+  }
+
+  function syncSelectorVisibilityOnRoute() {
+    if (!isGalleryRouteActive()) {
+      setSelectorHidden(false);
+      return;
+    }
+    if ((window.scrollY || 0) < 72) {
+      setSelectorHidden(false);
+    }
   }
 
   function initMasonry() {
@@ -807,24 +847,24 @@ function initializeGallery() {
     if (!imageSelector || !Array.isArray(items)) return;
     const existing = new Set(
       Array.from(imageSelector.querySelectorAll(".image-sort-button")).map((btn) =>
-        (btn.dataset.sort || "").toLowerCase().trim(),
+        normalizeCategoryName(btn.dataset.sort || ""),
       ),
     );
 
     const discovered = new Set();
     for (const item of items) {
-      const cat = (item.alt || "portfolio").toLowerCase().trim();
-      if (!cat || cat === "all" || existing.has(cat)) continue;
+      const cat = normalizeCategoryName(item.alt || "portfolio");
+      if (!cat || cat === "all" || cat === "portfolio" || existing.has(cat)) continue;
       discovered.add(cat);
     }
 
     for (const cat of discovered) {
-      const a = document.createElement("a");
-      a.href = "#";
-      a.className = "image-sort-button hover";
-      a.dataset.sort = cat;
-      a.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-      imageSelector.appendChild(a);
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "image-sort-button hover";
+      button.dataset.sort = cat;
+      button.textContent = CATEGORY_LABELS[cat] || cat.charAt(0).toUpperCase() + cat.slice(1);
+      imageSelector.appendChild(button);
       existing.add(cat);
     }
   }
@@ -943,11 +983,15 @@ function initializeGallery() {
 
   document.addEventListener("page-transition-complete", (event) => {
     if (event.detail && event.detail.page === "#gallery") {
+      setSelectorHidden(false);
+      lastScrollY = window.scrollY || 0;
       maybeLoadDynamicGallery();
     }
   });
 
   window.addEventListener("hashchange", () => {
+    syncSelectorVisibilityOnRoute();
+    lastScrollY = window.scrollY || 0;
     maybeLoadDynamicGallery();
   });
 
@@ -971,6 +1015,25 @@ function initializeGallery() {
   window.addEventListener(
     "scroll",
     () => {
+      const currentY = window.scrollY || 0;
+
+      if (imageSelector) {
+        if (!isGalleryRouteActive() || !gallerySection || getComputedStyle(gallerySection).display === "none") {
+          setSelectorHidden(false);
+        } else {
+          const delta = currentY - lastScrollY;
+          if (Math.abs(delta) >= 8) {
+            if (currentY < 72 || delta < 0) {
+              setSelectorHidden(false);
+            } else if (delta > 0) {
+              setSelectorHidden(true);
+            }
+          }
+        }
+      }
+
+      lastScrollY = currentY;
+
       if (!isMobileViewport()) return;
       clearTimeout(mobileScrollLayoutTimer);
       mobileScrollLayoutTimer = setTimeout(() => {
@@ -980,6 +1043,7 @@ function initializeGallery() {
     { passive: true },
   );
 
+  syncSelectorVisibilityOnRoute();
   setupPopupModal();
 }
 

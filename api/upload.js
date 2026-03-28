@@ -16,6 +16,21 @@ const ALLOWED_MIME = new Set([
   "image/gif",
   "image/avif",
 ]);
+const ALLOWED_CATEGORIES = new Set([
+  "portfolio",
+  "portrait",
+  "event",
+  "advertising",
+  "nature",
+  "architecture",
+  "places",
+]);
+
+function normalizeCategory(value) {
+  const safe = sanitizeSegment(value, "portfolio");
+  const canonical = safe === "events" ? "event" : safe;
+  return ALLOWED_CATEGORIES.has(canonical) ? canonical : "portfolio";
+}
 
 function parseBasicAuth(header) {
   if (!header || !header.startsWith("Basic ")) return null;
@@ -96,7 +111,7 @@ module.exports = async (req, res) => {
   }
 
   const base = sanitizeFilename(filename);
-  const safeAlt = sanitizeSegment(alt, "portfolio");
+  const safeAlt = normalizeCategory(alt);
   const path = `portfolio/${safeAlt}/${base}`;
 
   try {
